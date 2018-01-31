@@ -2,13 +2,25 @@
 
 var TrackingRepository = require('../repositories/trackingDataRepository');
 var Tracking = require('../models/trackingData');
+var Datastream = require('stream-array');
 
 exports.getAllTrackings = function (req, res) {
     var promise = TrackingRepository.getAllTrackings();
     promise.then(function (trackings) {
-        return res.json({success: true, data: trackings});
+        var read = Datastream(trackings);
+        return res.json({success: true, data: (read)});
     }, function (err) {
         return res.status(500).json({success: false, msg: 'Failed to get trackings', error: err});
+    });
+};
+
+exports.makeDatastream = function (req, res){
+    var promise = Datastream.makeDatastream();
+    promise.then(function (trackings) {
+
+        return Datastream(trackings);
+    }, function (err) {
+        return res.status(500).json({succes: false, error: err});
     });
 };
 

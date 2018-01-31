@@ -15,4 +15,7 @@ module.exports = function (app) {
 
     app.route('/trackings/truck/:truck')
         .get(TrackingDataController.getTrackingByTruck);
+
+    app.route('/trackings/stream/')
+        .get(TrackingDataController.makeDatastream);
 };
