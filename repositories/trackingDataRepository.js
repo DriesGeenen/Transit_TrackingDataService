@@ -11,8 +11,8 @@ exports.getTrackingById = function (id) {
     return Tracking.findById(id).select();
 };
 
-exports.getTrackingByTruck = function (truck) {
-    return Tracking.find({truck: truck}).select();
+exports.getTrackingByDriver = function (driver) {
+    return Tracking.find({driver: driver}).select();
 };
 
 exports.addTracking = function (newTracking) {

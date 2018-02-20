@@ -52,12 +52,12 @@ exports.getTrackingById = function (req, res) {
     });
 };
 
-exports.getTrackingByTruck = function (req, res) {
-    var promise = TrackingRepository.getTrackingByTruck(req.params.truck);
+exports.getTrackingByDriver = function (req, res) {
+    var promise = TrackingRepository.getTrackingByDriver(req.params.driver);
     promise.then(function (tracking) {
         return res.json({success: true, data: tracking});
     }, function (err) {
-        return res.status(500).json({success: false, msg: 'Failed to get tracking by truck', error: err});
+        return res.status(500).json({success: false, msg: 'Failed to get tracking by driver', error: err});
     });
 };
 

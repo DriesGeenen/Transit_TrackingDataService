@@ -13,8 +13,8 @@ module.exports = function (app) {
         .delete(TrackingDataController.deleteTracking)
         .put(TrackingDataController.updateTracking);
 
-    app.route('/trackings/truck/:truck')
-        .get(TrackingDataController.getTrackingByTruck);
+    app.route('/trackings/driver/:driver')
+        .get(TrackingDataController.getTrackingByDriver);
 
     app.route('/trackings/stream/')
         .get(TrackingDataController.makeDatastream);
