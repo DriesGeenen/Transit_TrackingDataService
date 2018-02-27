@@ -21,6 +21,7 @@ exports.getDummyDataStreamByDriver = function (req, res){
         let index = 0;
         const maxIndex = trackings.length - 1;
 
+        // todo create a readable stream
         releaseCoordinates();
         function releaseCoordinates(){
             if (index === maxIndex){
