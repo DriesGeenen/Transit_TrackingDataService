@@ -1,32 +1,43 @@
 'use strict';
 
-var TrackingRepository = require('../repositories/trackingDataRepository');
-var Tracking = require('../models/trackingData');
-var Datastream = require('stream-array');
+const TrackingRepository = require('../repositories/trackingDataRepository');
+const Tracking = require('../models/trackingData');
+const Datastream = require('stream-array');
 
 exports.getAllTrackings = function (req, res) {
-    var promise = TrackingRepository.getAllTrackings();
+    const promise = TrackingRepository.getAllTrackings();
     promise.then(function (trackings) {
-        var read = Datastream(trackings);
+        const read = Datastream(trackings);
         return res.json({success: true, data: (read)});
     }, function (err) {
         return res.status(500).json({success: false, msg: 'Failed to get trackings', error: err});
     });
 };
 
-exports.makeDatastream = function (req, res){
-    var promise = Datastream.makeDatastream();
-    promise.then(function (trackings) {
+exports.getDummyDataStreamByDriver = function (req, res){
+    const promise = TrackingRepository.getTrackingByDriver(req.params.driver);
+    promise.then((trackings) => {
 
-        return Datastream(trackings);
+        let index = 0;
+        const maxIndex = trackings.length - 1;
+
+        releaseCoordinates();
+        function releaseCoordinates(){
+            if (index === maxIndex){
+                return res.end(JSON.stringify(trackings[index]));
+            }
+            res.write(JSON.stringify(trackings[index]));
+            index++;
+            setTimeout(releaseCoordinates, 1000);
+        }
     }, function (err) {
         return res.status(500).json({succes: false, error: err});
     });
 };
 
 exports.addTracking = function (req, res) {
-    var newTracking = new Tracking(req.body);
-    var promise = TrackingRepository.addTracking(newTracking);
+    const newTracking = new Tracking(req.body);
+    const promise = TrackingRepository.addTracking(newTracking);
     promise.then(function (tracking) {
         return res.json({success: true, msg: 'Tracking created', data: tracking});
     }, function (err) {
@@ -35,7 +46,7 @@ exports.addTracking = function (req, res) {
 };
 
 exports.updateTracking = function (req, res) {
-    var promise = TrackingRepository.updateTracking(req.params.id, req.body);
+    const promise = TrackingRepository.updateTracking(req.params.id, req.body);
     promise.then(function () {
         return res.json({success: true, msg: 'Tracking updated'});
     }, function (err) {
@@ -44,7 +55,7 @@ exports.updateTracking = function (req, res) {
 };
 
 exports.getTrackingById = function (req, res) {
-    var promise = TrackingRepository.getTrackingById(req.params.id);
+    const promise = TrackingRepository.getTrackingById(req.params.id);
     promise.then(function (tracking) {
         return res.json({success: true, data: tracking});
     }, function (err) {
@@ -53,7 +64,7 @@ exports.getTrackingById = function (req, res) {
 };
 
 exports.getTrackingByDriver = function (req, res) {
-    var promise = TrackingRepository.getTrackingByDriver(req.params.driver);
+    const promise = TrackingRepository.getTrackingByDriver(req.params.driver);
     promise.then(function (tracking) {
         return res.json({success: true, data: tracking});
     }, function (err) {
@@ -62,7 +73,7 @@ exports.getTrackingByDriver = function (req, res) {
 };
 
 exports.deleteTracking = function (req, res) {
-    var promise = TrackingRepository.deleteTracking(req.params.id);
+    const promise = TrackingRepository.deleteTracking(req.params.id);
     promise.then(function () {
         return res.json({success: true, msg: 'Tracking removed'});
     }, function (err) {
